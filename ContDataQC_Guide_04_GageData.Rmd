@@ -1,0 +1,109 @@
+---
+title: ContDataQC Guide 04 Gage Data"
+author: "Erik.Leppo@tetratech.com"
+date: "`r Sys.time()`"
+output: 
+  html_notebook:
+    toc: yes
+    depth: 3
+    toc_float: no
+---
+# Purpose
+Example code for `ContDataQC` Guide 04 Gage Data
+
+# Demo
+
+
+## Load Library
+```{r LoadLibrary, eval=FALSE}
+# load library
+library(ContDataQC)
+# help file to get code
+?ContDataQC
+```
+
+## Example Data
+If don't have your own data you can copy data saved in the package.  The code below sets up some directories and 
+```{r ExampleData, eval=FALSE}
+# Parameters
+Selection.Operation <- c("GetGageData","QCRaw", "Aggregate", "SummaryStats")
+Selection.Type      <- c("Air","Water","AW","Gage","AWG","AG","WG")
+Selection.SUB <- c("Data1_RAW","Data2_QC","Data3_Aggregated","Data4_Stats")
+myDir.BASE <- getwd()
+
+# Create data directories
+myDir.create <- paste0("./",Selection.SUB[1])
+  ifelse(dir.exists(myDir.create)==FALSE,dir.create(myDir.create),"Directory already exists")
+myDir.create <- paste0("./",Selection.SUB[2])
+  ifelse(dir.exists(myDir.create)==FALSE,dir.create(myDir.create),"Directory already exists")
+myDir.create <- paste0("./",Selection.SUB[3])
+  ifelse(dir.exists(myDir.create)==FALSE,dir.create(myDir.create),"Directory already exists")
+myDir.create <- paste0("./",Selection.SUB[4])
+  ifelse(dir.exists(myDir.create)==FALSE,dir.create(myDir.create),"Directory already exists")
+
+# Save example data (assumes directory ./Data1_RAW/ exists)
+myData <- data_raw_test2_AW_20130426_20130725
+  write.csv(myData,paste0("./",Selection.SUB[1],"/test2_AW_20130426_20130725.csv"))
+myData <- data_raw_test2_AW_20130725_20131015
+  write.csv(myData,paste0("./",Selection.SUB[1],"/test2_AW_20130725_20131015.csv"))
+myData <- data_raw_test2_AW_20140901_20140930
+  write.csv(myData,paste0("./",Selection.SUB[1],"/test2_AW_20140901_20140930.csv"))
+myData <- data_raw_test4_AW_20160418_20160726
+  write.csv(myData,paste0("./",Selection.SUB[1],"/test4_AW_20160418_20160726.csv"))
+myFile <- "config.TZ.Central.R"
+  file.copy(file.path(path.package("ContDataQC"),"extdata",myFile)
+            ,file.path(getwd(),Selection.SUB[1],myFile))
+```
+
+## Get Gage Data
+Request 2 years of data (calendar years 2013 and 2014) for one gage (01187300, Hubbard River near West Hartland, CT).
+
+https://waterdata.usgs.gov/usa/nwis/uv?01187300
+
+```{r GetGageData, eval=FALSE}
+library(ContDataQC)
+# Set parameter
+myDir.BASE          <- getwd()
+myData.Operation    <- "GetGageData" #Selection.Operation[1]
+myData.SiteID       <- "01187300" # Hubbard River near West Hartland, CT
+myData.Type         <- "Gage" #Selection.Type[4]
+myData.DateRange.Start  <- "2013-01-01"
+myData.DateRange.End    <- "2014-12-31"
+myDir.import <- ""
+myDir.export <- file.path(myDir.BASE, "Data1_RAW")
+# Run the function
+ContDataQC(myData.Operation, myData.SiteID, myData.Type, myData.DateRange.Start
+          , myData.DateRange.End, myDir.import, myDir.export)
+```
+
+To get different gages change the SiteID.
+
+To get different time periods change the start and end dates.  Dates must be in the ISO standard format of YYYY-MM-DD (4 digit year, 2 digit month, 2 digit day, and dash separators).
+
+The import directory is not needed for this function so it can be left blank.
+
+The export directory is where the data download will be saved.
+
+Directories can be entered using the file.path function.
+
+### Gage Data, Different Timezone
+At times you will need to download data from different time zones (TZ).  ContDataQC relies on the USGS `dataRetrieval` package to get USGS gage data.  This package converts time from UTC (think Grenwich mean time) into your local time zone on your PC.  If you download data for a different time zone the times will be "off".  The `ContDataQC` gets around this by using a parameter in a configuration file.  You can include a custom config file when requesting data.  Just add a variable for fun.myConfig.
+
+In the example below change from US Eastern TZ to US Central TZ.
+```{r GetGageData_TZ, eval=FALSE}
+library(ContDataQC)
+# Set parameter
+myDir.BASE          <- getwd()
+myData.Operation    <- "GetGageData" #Selection.Operation[1]
+myData.SiteID       <- "07032000" # Mississippi River at Memphis, TN
+myData.Type         <- Selection.Type[4] #"Gage"
+myData.DateRange.Start  <- "2013-01-01"
+myData.DateRange.End    <- "2014-12-31"
+myDir.import <- ""
+myDir.export <- file.path(myDir.BASE, Selection.SUB[1])
+# include path if not in working directory
+myConfig            <- file.path(getwd(),Selection.SUB[1],"config.TZ.central.R")
+ContDataQC(myData.Operation, myData.SiteID, myData.Type, myData.DateRange.Start
+           , myData.DateRange.End, myDir.import, myDir.export, myConfig)
+```
+
