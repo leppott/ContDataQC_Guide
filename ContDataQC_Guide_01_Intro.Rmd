@@ -1,0 +1,127 @@
+---
+title: ContDataQC Guide 01 Intro
+author: "Erik.Leppo@tetratech.com"
+date: "`r Sys.time()`"
+output: 
+  html_notebook:
+    toc: yes
+    depth: 3
+    toc_float: no
+---
+# Purpose
+Example code for `ContDataQC` Guide 01 Intro
+
+# Explanation
+The `ContDataQC` package contains many functions.  This is a brief introdution to them.
+
+# Purpose of Package
+The package was designed to help users handle basic Quality Control (QC) of their continuous data logger information.
+
+# Help
+Help files are built into the code for each function.
+
+## Vingette
+The vignette pulls together all of the help examples into a single document.
+```{r Help_Vignette, eval=FALSE}
+library(ContDataQC)
+vignette("ContDataQC_Vignette",package="ContDataQC")
+```
+
+## List of All Functions
+
+```{r Help_Index, eval=FALSE}
+library(ContDataQC)
+help(package="ContDataQC")
+```
+
+List of all objects in package.
+```{r PackageListObjects, echo=TRUE}
+ls("package:ContDataQC")
+```
+# Functions
+Examples can be accessed from the help index (above) or with the help search function "?" (see code below).
+
+## ContDataQC
+The ContDataQC function takes as input a data frame of continuous data.  Most data loggers will output such a file.  The examples use the output from Hobo data loggers.
+
+The function can perform multiple sub-function that are intended to be run in sequence.
+
+* GetGageData
+    + Downloads to a file continuous data from USGS gages. 
+* QCRaw
+    + Applies basic QC checks on unmodified data.
+* Aggregate
+   +  This function is used to create a single file with a specified date range.  It combines data from multiple files and/or trims data from files. 
+   + These files can then be used for summary statistics.
+* SummaryStats
+    + Generates outputs of basic statistics for the given file.
+
+The output of each sub-function is different but is generally a new data file and a QC Report.
+
+The QCRaw, Aggregate, and SummaryStats functions are intended to be run on a directory of files and the function performs operations based on the function inputs and file names.  However, there are "file" versions of the same functions that will work on a vector of filenames.
+
+```{r Example_ContDataQC, eval=FALSE}
+library(ContDataQC)
+?ContDataQC
+```
+
+## CompSiteCDF
+Takes as an input a data frame with Data and SiteID and up to 8 columns of parameter data. Values are daily means for some measurement.
+
+CDFs are generate for all data, year, season, and year/season and saved to a PDF. Winter + Year is such that December is included with the following year (e.g., Dec 2013, Jan 2014, Feb 2014 are 2014Winter).
+
+Two plots per page are generated. The first plot is the proportion of values at a certain value. This plot is similar to a histogram. The second plot is a CDF of values. The line represents the proportion of values less than or equal to parameter values on the x-axis.
+```{r Example_CompSiteCDF, eval=FALSE}
+library(ContDataQC)
+?CompSiteCDF
+```
+
+## Export.IHA
+Creates a date frame (and file export) from Continuous Data in the format used by the `IHA` package.
+
+The `IHA` package is not included in the `ContDataQC` package. But an example is provided.  To run the example IHA calculations you will need the `IHA` package (from GitHub) and for the example export the `XLConnect` packages Install commands in the example.
+
+https://github.com/jasonelaw/iha
+```{r Example_Export.IHA, eval=FALSE}
+library(ContDataQC)
+?Export.IHA
+```
+
+## Export.StreamThermal
+Creates a date frame (and file export) from Continuous Data in the format used by the `StreamThermal` package. 
+
+Required fields are StationID, Date, dailyMax, dailyMin, and dailyMean. The fields are named "siteID", "Date", "MaxT", "MinT", and "MeanT".
+
+The `StreamThermal` package is available on GitHub. It can be installed withe the `devtools` package.
+
+https://github.com/tsangyp/StreamThermal
+```{r Example_Export.StreamThermal, eval=FALSE}
+library(ContDataQC)
+?Export.StreamThermal
+```
+
+## PeriodStats
+Generates daily stats (N, mean, min, max, range, std deviation) for the specified time period before a given date. Output is a multiple column CSV (Date and Parameter Name by statistic) and a report (HTML or DOCX) with plots. Input is the ouput file of the QC operation of ContDataQC().
+```{r Example_PeriodStats, eval=FALSE}
+library(ContDataQC)
+?PeriodStats
+```
+
+## rarify
+This function subsamples (rarifies) a 3 column data frame (SampleID, TaxonID, Count) to a fixed count per sample.  
+
+The function returns a data frame with the same three columns but the abund field has been modified so the total count for each sample is no longer above the target (subsiz).
+```{r Example_rarify, eval=FALSE}
+library(ContDataQC)
+?rarify
+```
+
+## RBIcalc
+Calculates the Richards-Baker (Flashiness) Index (RBI) from a vector of mean daily flows.  The return is a value that represents the RBI for the input data.
+
+```{r Example_RBI, eval=FALSE}
+library(ContDataQC)
+?RBIcalc
+```
+
+

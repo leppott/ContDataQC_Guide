@@ -1,5 +1,5 @@
 ---
-title: ContDataQC Guide 04 Gage Data"
+title: ContDataQC Guide 04 Gage Data
 author: "Erik.Leppo@tetratech.com"
 date: "`r Sys.time()`"
 output: 

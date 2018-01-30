@@ -4,14 +4,18 @@ Guides for ContDataQC.
 R package
 https://github.com/leppott/ContDataQC
 
-Include videos (.mp4), slides from videos (.pptx), and example R code from videos (.nb.html).  YouTube video links below.
+Includes videos (.mp4), slides from videos (.pptx), and example R code from videos (.nb.html).  
+
+YouTube video links below.
 
 01. Introduction
+    + https://youtu.be/FJAv7g9GPHI
 02. Config
-    + https://youtu.be/4B-1Jv5SguU
+    + https://youtu.be/qbUgPczdfdo
 03. Basic Functions
+    + https://youtu.be/zlq1YDPTBsw
 04. Gage Data
-
+    + https://youtu.be/vXyvp9r2tv4
 
 
 Erik.Leppo@tetratech.com
