@@ -16,6 +16,8 @@ YouTube video links below.
     + https://youtu.be/zlq1YDPTBsw
 04. Gage Data
     + https://youtu.be/vXyvp9r2tv4
+05. Config File Modifications
+    + https://youtu.be/LCHnFs-AdXc
 
 
 Erik.Leppo@tetratech.com
